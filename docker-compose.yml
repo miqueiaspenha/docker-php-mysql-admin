@@ -35,7 +35,7 @@ services:
     #   - ./logs/mysql:/var/log/mysql
 
   phpmyadmin:
-    image: phpmyadmin/phpmyadmin
+    image: phpmyadmin/phpmyadmin:5.0.2
     container_name: phpmyadmin
     links:
       - db
