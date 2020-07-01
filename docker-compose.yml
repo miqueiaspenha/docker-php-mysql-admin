@@ -1,0 +1,47 @@
+version: "3"
+
+services:
+  web:
+    image: nginx:1.19.0-alpine
+    container_name: nginx
+    restart: always
+    ports:
+      - 80:80
+    volumes:
+      - ./www:/www
+      - ./conf/site.conf:/etc/nginx/conf.d/site.conf
+    links: 
+      - php
+  
+  php:
+    build: .
+    container_name: php-fpm
+    volumes:
+      - ./www:/www
+    links: 
+      - db
+  
+  db:
+    image: mariadb:10.5.4
+    container_name: mysql
+    ports:
+      - 3306:3306
+    restart: always
+    environment: 
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: default
+    # volumes:
+    #   - ./mysql:/var/lib/mysql
+    #   - ./logs/mysql:/var/log/mysql
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin
+    links:
+      - db
+    environment: 
+      PMA_HOST: db
+      PMA_PORT: 3306
+    ports:
+      - 8080:80
+      - 9000:9000
